@@ -1,0 +1,556 @@
+{
+	"info": {
+		"_postman_id": "405da0e6-0a61-42b7-88de-b8b850c80518",
+		"name": "PokeAPI Testes ",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "36849393"
+	},
+	"item": [
+		{
+			"name": "pokemon",
+			"item": [
+				{
+					"name": "Validar bulbasaur",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+									"pm.test(\"Nome correto\", () => pm.expect(pm.response.json().name).to.eql('bulbasaur'));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://pokeapi.co/api/v2/pokemon/bulbasaur"
+					},
+					"response": []
+				},
+				{
+					"name": "Validar types com pelo menos 1 item",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const json = pm.response.json();",
+									"pm.test(\"Types é um array com pelo menos 1 item\", () => pm.expect(json.types.length).to.be.above(0));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://pokeapi.co/api/v2/pokemon/charmander"
+					},
+					"response": []
+				},
+				{
+					"name": "Validar height e weight não negativos",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const json = pm.response.json();",
+									"pm.test(\"Height e weight válidos\", () => {",
+									"    pm.expect(json.height).to.be.above(0);",
+									"    pm.expect(json.weight).to.be.above(0);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://pokeapi.co/api/v2/pokemon/squirtle"
+					},
+					"response": []
+				},
+				{
+					"name": "ID inexistente deve retornar 404",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status 404\", () => pm.response.to.have.status(404));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://pokeapi.co/api/v2/pokemon/99999"
+					},
+					"response": []
+				},
+				{
+					"name": "Comparar resposta por nome e ID (pikachu)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Comparar nome pikachu e ID 25\", () => true);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://pokeapi.co/api/v2/pokemon/pikachu"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ability",
+			"item": [
+				{
+					"name": "Validar efeito de blaze",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const json = pm.response.json();",
+									"pm.test(\"Effect_entries presente\", () => pm.expect(json.effect_entries.length).to.be.above(0));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://pokeapi.co/api/v2/ability/blaze"
+					},
+					"response": []
+				},
+				{
+					"name": "Pokemon usando a habilidade",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Pokemon array existe\", () => pm.expect(pm.response.json().pokemon).to.be.an('array'));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://pokeapi.co/api/v2/ability/overgrow"
+					},
+					"response": []
+				},
+				{
+					"name": "Generation está presente",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Campo generation presente\", () => pm.expect(pm.response.json().generation.name).to.be.a('string'));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://pokeapi.co/api/v2/ability/overgrow"
+					},
+					"response": []
+				},
+				{
+					"name": "Ability inválida retorna 404",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status 404\", () => pm.response.to.have.status(404));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://pokeapi.co/api/v2/ability/0000"
+					},
+					"response": []
+				},
+				{
+					"name": "Short effect presente",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entry = pm.response.json().effect_entries.find(e => e.language.name === 'en');",
+									"pm.test(\"Short effect existe\", () => pm.expect(entry.short_effect).to.be.a('string'));"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://pokeapi.co/api/v2/ability/blaze"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "type",
+			"item": [
+				{
+					"name": "Damage relations de fire",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"double_damage_from presente\", () => pm.expect(pm.response.json().damage_relations).to.have.property('double_damage_from'));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://pokeapi.co/api/v2/type/fire"
+					},
+					"response": []
+				},
+				{
+					"name": "Pokemon list para electric",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Pokemon array existe\", () => pm.expect(pm.response.json().pokemon).to.be.an('array'));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://pokeapi.co/api/v2/type/electric"
+					},
+					"response": []
+				},
+				{
+					"name": "Moves do tipo ground",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Moves array existe\", () => pm.expect(pm.response.json().moves).to.be.an('array'));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://pokeapi.co/api/v2/type/ground"
+					},
+					"response": []
+				},
+				{
+					"name": "Tipo inválido retorna 404",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status 404\", () => pm.response.to.have.status(404));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://pokeapi.co/api/v2/type/tipo-inexistente"
+					},
+					"response": []
+				},
+				{
+					"name": "Campos principais não são nulos",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const json = pm.response.json();",
+									"pm.test(\"Campos principais presentes\", () => {",
+									"    pm.expect(json.name).to.be.a('string');",
+									"    pm.expect(json.damage_relations).to.be.an('object');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://pokeapi.co/api/v2/type/water"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "location",
+			"item": [
+				{
+					"name": "Location válida cerulean-city",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+									"pm.test(\"Nome cerulean-city\", () => pm.expect(pm.response.json().name).to.eql('cerulean-city'));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://pokeapi.co/api/v2/location/cerulean-city"
+					},
+					"response": []
+				},
+				{
+					"name": "Areas existe e pode estar vazia",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Campo areas existe\", () => pm.expect(pm.response.json()).to.have.property('areas'));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://pokeapi.co/api/v2/location/1"
+					},
+					"response": []
+				},
+				{
+					"name": "Location inexistente retorna 404",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status 404\", () => pm.response.to.have.status(404));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://pokeapi.co/api/v2/location/99999"
+					},
+					"response": []
+				},
+				{
+					"name": "Campo region presente",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Campo region.name presente\", () => pm.expect(pm.response.json().region.name).to.be.a('string'));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://pokeapi.co/api/v2/location/cerulean-city"
+					},
+					"response": []
+				},
+				{
+					"name": "Game index presente",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Campo game_index presente\", () => pm.expect(pm.response.json()).to.have.property('game_indices'));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://pokeapi.co/api/v2/location/1"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "move",
+			"item": [
+				{
+					"name": "Thunderbolt é tipo elétrico",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Type é electric\", () => pm.expect(pm.response.json().type.name).to.eql('electric'));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://pokeapi.co/api/v2/move/thunderbolt"
+					},
+					"response": []
+				},
+				{
+					"name": "Atributos base positivos",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const json = pm.response.json();",
+									"pm.test(\"Accuracy, Power e PP são válidos\", () => {",
+									"    pm.expect(json.accuracy).to.be.above(0);",
+									"    pm.expect(json.power).to.be.above(0);",
+									"    pm.expect(json.pp).to.be.above(0);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://pokeapi.co/api/v2/move/hyper-beam"
+					},
+					"response": []
+				},
+				{
+					"name": "Move inválido retorna 404",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status 404\", () => pm.response.to.have.status(404));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://pokeapi.co/api/v2/move/99999"
+					},
+					"response": []
+				},
+				{
+					"name": "Short effect presente",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const entry = pm.response.json().effect_entries.find(e => e.language.name === 'en');",
+									"pm.test(\"Short effect presente\", () => pm.expect(entry.short_effect).to.be.a('string'));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://pokeapi.co/api/v2/move/hyper-beam"
+					},
+					"response": []
+				},
+				{
+					"name": "Generation do golpe existe",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Campo generation.name presente\", () => pm.expect(pm.response.json().generation.name).to.be.a('string'));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://pokeapi.co/api/v2/move/solar-beam"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
